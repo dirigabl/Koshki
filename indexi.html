@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Какая ты кошка?</title>
+<style>
+:root{--bg:#fbf4e8;--card:#fffaf1;--beige:#f0e0c8;--brown:#9a6236;--orange:#d9894a;--pink:#e8798f;--text:#3b2416;--mut:#7a5c46;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2a1d14;--card:#3a2a1e;--beige:#4a3626;--text:#f6e9d8;--mut:#cdb298}}
+:root[data-theme="dark"]{--bg:#2a1d14;--card:#3a2a1e;--beige:#4a3626;--text:#f6e9d8;--mut:#cdb298}
+*{box-sizing:border-box}html{scroll-behavior:smooth;scroll-padding-top:calc(70px + env(safe-area-inset-top,0px))}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.6 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;line-height:1.2;margin:0 0 .5em}
+h2{font-size:clamp(1.6rem,4vw,2.3rem)}
+section{max-width:1100px;margin:auto;padding:56px 18px}
+nav{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);padding-top:env(safe-area-inset-top,0px);border-bottom:1px solid var(--beige)}
+.nb{max-width:1100px;margin:auto;display:flex;align-items:center;justify-content:space-between;padding:10px 18px}
+.logo{font-weight:700;font-family:Georgia,serif;color:var(--brown);text-decoration:none}
+.links{display:flex;gap:4px;flex-wrap:wrap}.links a{padding:6px 10px;border-radius:99px;color:var(--text);text-decoration:none;font-size:.9rem}.links a:hover{background:var(--beige)}
+#bg{display:none;font-size:1.4rem;background:none;border:0;color:var(--text);cursor:pointer}
+@media(max-width:900px){#bg{display:block}.links{display:none;position:absolute;top:100%;left:0;right:0;background:var(--bg);flex-direction:column;padding:10px 18px;border-bottom:1px solid var(--beige)}.links.open{display:flex}.links a{padding:12px}}
+.btn{display:inline-block;border:0;cursor:pointer;padding:14px 26px;border-radius:99px;background:var(--orange);color:#fff;font-weight:700;font-size:1rem;text-decoration:none;transition:.2s}.btn:hover{transform:translateY(-2px);background:var(--brown)}
+.btn.alt{background:transparent;color:var(--brown);border:2px solid var(--brown)}.btn.alt:hover{background:var(--beige);color:var(--brown)}
+.hero{display:grid;grid-template-columns:1.1fr 1fr;gap:30px;align-items:center;padding-top:40px}
+@media(max-width:760px){.hero{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2.2rem,6vw,3.6rem)}.hero p{color:var(--mut);font-size:1.1rem}
+.cats{display:flex;justify-content:center;align-items:flex-end;background:var(--beige);border-radius:36px;padding:26px 10px 0}.cats svg{width:33%;margin:0 -2%;animation:fl 4s ease-in-out infinite}.cats svg:nth-child(2){animation-delay:.6s;width:38%}.cats svg:nth-child(3){animation-delay:1.2s}
+@keyframes fl{50%{transform:translateY(-8px)}}
+.paw{display:inline-block;animation:fl 3s ease-in-out infinite}
+.intro{background:var(--card);border-radius:28px;padding:22px;text-align:center;margin-top:20px;font-size:1.1rem}
+.three{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin-top:20px}
+.three div,.card{background:var(--card);border-radius:24px;padding:18px;border:1px solid var(--beige)}
+.tools{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+.chip{border:1px solid var(--beige);background:var(--card);color:var(--text);border-radius:99px;padding:8px 14px;cursor:pointer;font-size:.9rem}.chip.on{background:var(--pink);color:#fff;border-color:var(--pink)}
+input[type=search]{width:100%;padding:13px 18px;border-radius:99px;border:2px solid var(--beige);background:var(--card);color:var(--text);font-size:1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:16px}
+.bc{background:var(--card);border-radius:26px;overflow:hidden;border:1px solid var(--beige);cursor:pointer;transition:.25s}.bc:hover{transform:translateY(-4px);box-shadow:0 10px 24px #0002}
+.im{position:relative}.im img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:inherit}.bc .im{background:var(--beige);padding:14px 30px 0;overflow:hidden}.bc svg{width:100%;display:block;transition:.3s}.bc:hover svg{transform:scale(1.08)}
+.bc .tx{padding:14px 16px 18px}.bc h3{font-size:1.15rem;margin:0 0 4px}.bc p{margin:4px 0;color:var(--mut);font-size:.9rem}
+.tag{display:inline-block;font-size:.75rem;background:var(--beige);border-radius:99px;padding:2px 9px;margin:2px 2px 0 0}
+.rv{opacity:0;transform:translateY(24px);transition:.6s}.rv.in{opacity:1;transform:none}
+#modal{position:fixed;inset:0;background:#000a;z-index:50;display:none;overflow:auto;padding:18px}
+#modal.show{display:block}.mb{max-width:760px;margin:20px auto;background:var(--bg);border-radius:30px;padding:22px;position:relative;animation:pop .3s}
+@keyframes pop{from{transform:scale(.94);opacity:0}}
+.x{position:absolute;right:14px;top:12px;font-size:1.6rem;border:0;background:none;color:var(--text);cursor:pointer}
+.mb .im{background:var(--beige);border-radius:24px;padding:16px 20%;margin-bottom:14px}.mb .im svg{width:100%;display:block}
+.dl{display:grid;gap:10px}.dl div{background:var(--card);border-radius:18px;padding:12px 16px}.dl b{color:var(--brown);display:block;font-size:.85rem;text-transform:uppercase;letter-spacing:.04em}
+.quiz{background:var(--card);border-radius:32px;padding:24px;border:1px solid var(--beige);max-width:640px;margin:auto}
+.pg{height:10px;background:var(--beige);border-radius:9px;overflow:hidden;margin-bottom:18px}.pg i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),var(--pink));transition:width .5s}
+.ans{display:block;width:100%;text-align:left;margin:9px 0;padding:15px 18px;border-radius:20px;border:2px solid var(--beige);background:var(--bg);color:var(--text);font-size:1rem;cursor:pointer;transition:.2s}.ans:hover{border-color:var(--pink);transform:translateX(4px)}
+.qs{animation:pop .35s}.res{text-align:center;animation:pop .6s}.res .im{max-width:240px;margin:0 auto}.res svg{width:100%}
+.big{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+table{width:100%;border-collapse:collapse;background:var(--card);border-radius:18px;overflow:hidden}td,th{padding:11px 14px;text-align:left;border-bottom:1px solid var(--beige);vertical-align:top}th{background:var(--beige)}.ok{color:#2f7d3a}.no{color:#c0392b}
+.tw{overflow-x:auto}
+.warn{background:#c0392b22;border-left:5px solid #c0392b;border-radius:14px;padding:14px;margin:16px 0}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+details{background:var(--card);border-radius:18px;padding:12px 16px;border:1px solid var(--beige)}summary{cursor:pointer;font-weight:700}
+.fc{cursor:pointer;min-height:150px;transition:.3s}.fc:hover{background:var(--beige)}.fc .a{display:none;color:var(--mut)}.fc.open .a{display:block}.fc.open .q{color:var(--pink)}
+ul.chk{list-style:none;padding:0;columns:2 150px}ul.chk li:before{content:"✓ ";color:var(--pink);font-weight:700}
+footer{background:var(--beige);padding:34px 18px calc(34px + env(safe-area-inset-bottom,0px));text-align:center}footer a{color:var(--brown);margin:0 8px}
+.sh a{margin:4px 6px 4px 0}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<nav><div class="nb"><a class="logo" href="#top">🐾 Какая ты кошка?</a><button id="bg" aria-label="Меню">☰</button>
+<div class="links" id="lk"><a href="#top">Главная</a><a href="#breeds">Породы</a><a href="#quiz">Тест</a><a href="#food">Питание</a><a href="#care">Уход</a><a href="#facts">Факты</a><a href="#shops">Зоомагазины Екатеринбурга</a><a href="#contacts">Контакты</a></div></div></nav>
+
+<section id="top" class="hero">
+<div><h1>Какая ты кошка? 🐱</h1><p>Пройди небольшой тест и узнай, какая порода кошек больше всего похожа на тебя</p>
+<div class="big" style="justify-content:flex-start"><a class="btn" href="#quiz">Пройти тест</a><a class="btn alt" href="#breeds">Посмотреть породы</a></div></div>
+<div class="cats" id="hc"></div>
+<div class="intro" style="grid-column:1/-1"><span class="paw">🐾</span> Здесь ты узнаешь о породах кошек, их характере, питании и уходе, а ещё сможешь узнать, какая кошка похожа на тебя.
+<div class="three"><div>🔮<br><b>Узнай свою кошку</b></div><div>📖<br><b>Изучи породы</b></div><div>💛<br><b>Научись правильно заботиться о кошке</b></div></div></div>
+</section>
+
+<section id="breeds"><h2 class="rv">Породы кошек</h2>
+<input type="search" id="q" placeholder="🔍 Поиск по названию породы">
+<div class="tools" id="fl"></div><div class="grid" id="bg2"></div></section>
+
+<section id="quiz"><h2 class="rv" style="text-align:center">Тест «Какая ты кошка?»</h2><div class="quiz" id="qz"></div></section>
+
+<section id="food"><h2 class="rv">Питание кошек</h2>
+<div class="cols">
+<details open><summary>Чем кормить кошку</summary><p>Кошка — хищник, ей нужен белок животного происхождения. Выбирай готовый полнорационный корм, подходящий по возрасту, и не смешивай его с «человеческой» едой.</p></details>
+<details><summary>Влажный и сухой корм</summary><p>Влажный корм содержит больше воды, сухой удобен и долго хранится. Многие владельцы комбинируют оба. Всегда читай рекомендации на упаковке.</p></details>
+<details><summary>Вода</summary><p>Свежая чистая вода должна быть доступна всегда. Поставь несколько мисок в разных местах — кошки любят выбирать.</p></details>
+<details><summary>Режим питания</summary><p>Взрослым кошкам обычно дают еду 2–3 раза в день в одно и то же время. Следи, чтобы кошка не переедала.</p></details>
+<details><summary>Лакомства</summary><p>Лакомства — это поощрение, а не основа рациона. Выбирай специальные кошачьи и давай понемногу.</p></details>
+<details><summary>Питание котят</summary><p>Котятам нужен специальный корм для котят: они быстро растут и едят чаще взрослых. Режим и рацион лучше обсудить с ветеринаром.</p></details>
+<details><summary>Питание взрослых кошек</summary><p>Подойдёт полнорационный корм для взрослых. Размер порции зависит от веса, активности и самого корма.</p></details>
+<details><summary>Питание пожилых кошек</summary><p>С возрастом потребности меняются. Есть корма для старших кошек; о смене рациона посоветуйся с ветеринаром.</p></details>
+</div>
+<h3 style="margin-top:28px">Что можно и нельзя</h3>
+<div class="tw"><table><tr><th>Продукт</th><th>Кошкам разрешено</th><th>Кошкам нельзя</th></tr>
+<tr><td>Мясо (курица, индейка, говядина)</td><td class="ok">✓ варёное, без соли и специй</td><td class="no">✗ жареное, копчёное, сырая свинина</td></tr>
+<tr><td>Рыба</td><td class="ok">✓ изредка, варёная, без костей</td><td class="no">✗ сырая, солёная, много и часто</td></tr>
+<tr><td>Молочное</td><td class="ok">✓ специальное кошачье молоко</td><td class="no">✗ обычное молоко (у многих кошек не переносится)</td></tr>
+<tr><td>Яйца</td><td class="ok">✓ варёный желток изредка</td><td class="no">✗ сырые яйца</td></tr>
+<tr><td>Овощи</td><td class="ok">✓ немного варёных (кабачок, морковь)</td><td class="no">✗ лук, чеснок</td></tr>
+<tr><td>Сладкое</td><td class="ok">—</td><td class="no">✗ шоколад, конфеты, выпечка</td></tr>
+<tr><td>Прочее</td><td class="ok">✓ кошачья трава</td><td class="no">✗ виноград и изюм, алкоголь, кофе, кости</td></tr></table></div>
+<div class="warn"><b>⚠️ Опасно для кошек:</b> лук и чеснок, шоколад, виноград и изюм, алкоголь, кофе и чай, ксилит (заменитель сахара), варёные трубчатые кости. При отравлении сразу звони ветеринару.</div>
+<p style="color:var(--mut)">Лечебные диеты и питание при болезнях назначает только ветеринарный врач.</p></section>
+
+<section id="care"><h2 class="rv">Уход и содержание</h2>
+<h3>Что нужно кошке дома</h3>
+<ul class="chk card"><li>миски</li><li>лоток</li><li>наполнитель</li><li>когтеточка</li><li>лежанка</li><li>игрушки</li><li>переноска</li><li>средства для ухода</li></ul>
+<div class="cols" style="margin-top:16px">
+<div class="card rv">🚽 <b>Лоток и наполнитель</b><br>Лоток — в тихом месте, не рядом с миской. Убирай каждый день, наполнитель меняй целиком по инструкции.</div>
+<div class="card rv">🥣 <b>Миски</b><br>Керамика, металл или стекло моются лучше пластика. Мой ежедневно.</div>
+<div class="card rv">🪵 <b>Когтеточка и игрушки</b><br>Нужна устойчивая высокая когтеточка. Игрушки меняй, чтобы не надоедали; мелкие детали убирай.</div>
+<div class="card rv">🪮 <b>Шерсть</b><br>Короткошёрстных чешут раз в неделю, длинношёрстных — чаще, в линьку каждый день.</div>
+<div class="card rv">✂️ <b>Когти и зубы</b><br>Стригут только кончик когтя специальной когтерезкой. К чистке зубов приучай постепенно кошачьей пастой.</div>
+<div class="card rv">👂 <b>Уши</b><br>Осматривай регулярно. Тёмные выделения, запах, покраснение — повод показать кошку ветеринару.</div>
+<div class="card rv">🏠 <b>Безопасность</b><br>Установи защитные сетки на окна, убери провода и ядовитые растения (например, лилии), спрячь мелкие предметы.</div>
+<div class="card rv">🧳 <b>Переноска</b><br>Пусть стоит открытой дома, чтобы кошка привыкла и не боялась поездок.</div>
+<div class="card rv">💉 <b>Вакцинация и осмотры</b><br>Прививки, обработка от паразитов и плановые осмотры — по графику, который составит ветеринар.</div></div></section>
+
+<section id="facts"><h2 class="rv">Интересные факты</h2><p style="color:var(--mut)">Нажми на карточку 👇</p><div class="cols" id="fg"></div></section>
+
+<section id="shops"><h2 class="rv">Зоомагазины Екатеринбурга</h2>
+<p>Чтобы не публиковать устаревшие адреса, телефоны и часы работы, мы подготовили ссылки на поиск по Яндекс Картам — там всегда актуальные данные, отзывы и маршруты.</p>
+<div class="cols" id="sh"></div>
+<p style="margin-top:18px"><a class="btn" target="_blank" rel="noopener" href="https://yandex.ru/maps/54/yekaterinburg/search/%D0%B7%D0%BE%D0%BE%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD/">📍 Открыть на карте</a></p></section>
+
+<section id="contacts"><h2 class="rv">Контакты</h2><div class="card">Это учебный проект о кошках. Идеи по новым породам и вопросам для теста можно передать автору сайта лично. 🐾</div></section>
+
+<footer><h3>Какая ты кошка? 🐾</h3><p>Интерактивный журнал о кошках: тест, породы, питание и уход.</p>
+<p><a href="#breeds">Породы</a><a href="#quiz">Тест</a><a href="#food">Питание</a><a href="#care">Уход</a><a href="#shops">Зоомагазины</a><a href="#contacts">Контакты</a></p>
+<p style="font-size:.85rem;color:var(--mut);max-width:560px;margin:auto">Информация на сайте носит ознакомительный характер. При проблемах со здоровьем кошки обращайся к ветеринарному врачу.</p></footer>
+
+<div id="modal"><div class="mb" id="mb"></div></div>
+
+<script>
+// профиль: [спокойствие, активность, общительность, независимость]
+const B=[
+["Британская короткошёрстная","#8c9aa8","calm newbie indep short big","Крупная","Низкая","12–17 лет","Спокойная, уравновешенная, неназойливая. Любит свой уголок и дозированное внимание.","Плотная плюшевая шерсть, круглая голова, пухлые щёки.","Чесать раз в неделю, в линьку чаще. Следить за весом.","Терпеливая, но не любит, когда её таскают","Мирно уживается с другими","Британцы считаются одними из самых «домашних» кошек.","Занятым людям, ценящим спокойствие","Шотландская, Русская голубая",[3,1,1,2]],
+["Шотландская вислоухая","#d9b48a","calm newbie social short","Средняя","Низкая","11–15 лет","Мягкая, привязчивая и ласковая, любит быть рядом с хозяином.","Маленькие загнутые вперёд ушки и круглые глаза.","Шерсть чесать раз в неделю; осматривать уши. Порода требует внимания к здоровью суставов.","Хорошо ладит с детьми","Дружелюбна","Все вислоухие котята рождаются с прямыми ушами — они «вислеют» к 3 неделям.","Тем, кто хочет спокойного и ласкового друга","Британская, Бирманская",[3,1,2,1]],
+["Мейн-кун","#a0673a","social big long active","Очень крупная","Средняя","12–15 лет","Добрый «ласковый великан»: дружелюбный, любопытный, любит быть в центре семьи.","Крупное тело, кисточки на ушах, пушистый хвост.","Чесать 2–3 раза в неделю, нужна просторная когтеточка и большой лоток.","Отлично, очень терпелив","Хорошо ладит, даже с собаками","Мейн-куны могут весить до 8–10 кг и «разговаривают» щебечущими звуками.","Семьям с местом дома и временем на общение","Норвежская лесная, Сибирская",[2,2,3,1]],
+["Сиамская","#e6d3b8","active social short","Средняя","Высокая","12–15 лет","Разговорчивая, любознательная и очень привязанная к человеку.","Стройное тело, голубые глаза, тёмная «маска» на мордочке.","Короткая шерсть чешется редко. Нужно много общения и игр.","Любит игры с детьми","Лучше ладит с активными питомцами","Котята сиамцев рождаются почти белыми и темнеют с возрастом.","Тем, кто готов разговаривать и играть","Бомбейская, Девон-рекс",[0,2,3,1]],
+["Бенгальская","#c98a3d","active short indep big","Средняя/крупная","Очень высокая","12–16 лет","Энергичная и умная, любит лазать, исследовать и играть с водой.","Пятнистая «леопардовая» шерсть с блеском.","Шерсть простая в уходе, зато нужны высокие полки, комплексы и много игр.","Подойдёт активным детям","Нужно знакомить аккуратно","Бенгалов создали, скрестив домашних кошек с диким азиатским леопардовым котом.","Активным людям, готовым играть каждый день","Абиссинская, Корниш-рекс",[0,3,2,2]],
+["Сфинкс","#e0b9a0","social small","Средняя","Средняя","9–15 лет","Ласковый, тёплый и общительный, любит греться на коленях.","Почти без шерсти, много складок, большие уши.","Кожу нужно протирать и купать по необходимости, оберегать от холода и солнца.","Дружелюбен","Любит компанию","Сфинксы кажутся голыми, но на коже есть тонкий пушок.","Тем, кто хочет «кошку-грелку» и общение","Девон-рекс, Корниш-рекс",[1,2,3,0]],
+["Персидская","#f1e6d2","calm long indep","Средняя","Низкая","12–17 лет","Спокойная, мягкая, любит тишину и размеренный быт.","Длинная густая шерсть, плоская мордочка.","Расчёсывать ежедневно, протирать глаза, регулярно показывать ветеринару.","Предпочитает спокойных детей","Мирная","Персы — одна из старейших декоративных пород.","Домоседам, готовым ухаживать за шерстью","Экзотическая, Рэгдолл",[3,0,1,2]],
+["Абиссинская","#b5652e","active short indep small","Средняя","Очень высокая","12–15 лет","Умная и подвижная, любит лазать и исследовать всё вокруг.","Тонкое тело, «тикированная» шерсть, большие уши.","Шерсть чесать редко, но нужны игры и высокие места.","Любит игры","Живёт мирно, если хватает места","Абиссинцы часто сидят на самом высоком месте в доме.","Тем, кто любит движение и приключения","Бенгальская, Сиамская",[0,3,2,2]],
+["Русская голубая","#7f93a3","calm indep short newbie","Средняя","Средняя","15–20 лет","Сдержанная, аккуратная и преданная, не навязчива.","Серебристо-голубая шерсть, зелёные глаза.","Шерсть чесать раз в неделю. Любит порядок и чистоту лотка.","Спокойна, любит тихих детей","Осторожна с незнакомыми","Русские голубые известны таинственной «улыбкой».","Тем, кто любит тихую преданность","Британская, Бомбейская",[2,1,1,3]],
+["Рэгдолл","#cdbba5","calm social long big","Крупная","Низкая","12–17 лет","Нежная, расслабленная, любит, когда её держат на руках.","Крупная, мягкая, с голубыми глазами и пушистым хвостом.","Чесать 2–3 раза в неделю, кормить без перекорма.","Очень терпелив","Дружелюбен","Название переводится как «тряпичная кукла»: порода расслабляется на руках.","Семьям, которые любят обнимашки","Бирманская, Персидская",[3,1,3,0]],
+["Норвежская лесная","#8a6a4a","active long big indep","Крупная","Средняя","14–16 лет","Сильная, независимая, любит лазать и гулять.","Густая водоотталкивающая шерсть и пушистый хвост.","Чесать 2–3 раза в неделю, в линьку — ежедневно.","Дружелюбна, но любит свободу","Хорошо уживается","В скандинавских сказках норвежским кошкам приписывали волшебную силу.","Любителям природы и самостоятельных кошек","Сибирская, Мейн-кун",[2,2,2,2]],
+["Бирманская","#caa77d","calm social long","Средняя","Низкая","12–16 лет","Нежная, ласковая, обожает компанию человека.","Шелковистая шерсть, «перчатки» на лапках, синие глаза.","Чесать 1–2 раза в неделю.","Отлично подходит семьям","Мирная","Бирманских кошек в Азии считали священными.","Тем, кому нужен верный спутник","Рэгдолл, Шотландская",[2,1,3,1]],
+["Сибирская","#a3835f","active long indep big newbie","Крупная","Средняя","12–15 лет","Сильная, выносливая, умная и ласковая без навязчивости.","Густая трёхслойная шерсть и мощное тело.","Чесать 2–3 раза в неделю, в линьку чаще.","Хорошо ладит","Уживается","Сибирские кошки считаются хорошими охотницами на мышей.","Новичкам и тем, кто любит «настоящих» кошек","Норвежская лесная, Мейн-кун",[2,2,2,2]],
+["Корниш-рекс","#d8c4a8","active social short small","Средняя","Очень высокая","11–15 лет","Весёлая, быстрая, любит играть и быть в центре внимания.","Волнистая шерсть и тонкое тело.","Купаться и чесать редко, но нужны игры и тепло.","Идеален для активных детей","Любит компанию","Шерсть корниш-рекса короткая и волнистая, как будто её уложили.","Энергичным семьям","Девон-рекс, Бенгальская",[0,3,3,1]],
+["Девон-рекс","#b9a58c","active social short small","Средняя","Высокая","10–15 лет","Озорная, привязанная к людям, часто сидит на плече.","Большие уши, огромные глаза, мягкая волнистая шерсть.","Уши чистят аккуратно, шерсть почти не требует ухода.","Любит детей","Дружелюбен","Девон-рексов за повадки называют «эльфами» и «обезьянками».","Тем, кто хочет весёлого друга","Корниш-рекс, Сфинкс",[1,3,3,0]],
+["Бомбейская","#2f2a2a","social calm short newbie","Средняя","Средняя","12–16 лет","Ласковая, спокойная, как «мини-пантера» с мягким характером.","Блестящая чёрная шерсть и золотые глаза.","Шерсть чесать редко.","Хорошо ладит","Дружелюбна","Бомбейская порода выведена как маленькая домашняя «чёрная пантера».","Тем, кто хочет ласковую кошку без хлопот","Сиамская, Русская голубая",[2,1,3,1]]];
+const T={calm:"Спокойные",active:"Активные",newbie:"Для новичков",social:"Общительные",indep:"Независимые",long:"Длинношёрстные",short:"Короткошёрстные",big:"Крупные",small:"Маленькие"};
+function ph(i){return `<img src="img/${i+1}.jpg" alt="${B[i][0]}" loading="lazy" onerror="this.remove()">`}
+function cat(c,w){return `<svg viewBox="0 0 200 180"><path d="M30 20 L80 55 L30 90Z M170 20 L120 55 L170 90Z" fill="${c}"/><path d="M42 40 L66 56 L42 72Z M158 40 L134 56 L158 72Z" fill="#e8798f" opacity=".6"/><ellipse cx="100" cy="105" rx="78" ry="68" fill="${c}"/><ellipse cx="72" cy="98" rx="11" ry="${w||14}" fill="#fff"/><ellipse cx="128" cy="98" rx="11" ry="${w||14}" fill="#fff"/><circle cx="72" cy="99" r="6" fill="#222"/><circle cx="128" cy="99" r="6" fill="#222"/><path d="M92 118 L108 118 L100 128Z" fill="#e8798f"/><path d="M100 128 Q92 142 82 136 M100 128 Q108 142 118 136" stroke="#222" stroke-width="2.5" fill="none"/><path d="M60 122 L18 114 M60 130 L18 134 M140 122 L182 114 M140 130 L182 134" stroke="#fff8" stroke-width="2"/></svg>`}
+const $=s=>document.querySelector(s);
+$("#hc").innerHTML=cat("#d9894a")+cat("#8c9aa8")+cat("#e6d3b8");
+$("#bg").onclick=()=>$("#lk").classList.toggle("open");
+$("#lk").onclick=()=>$("#lk").classList.remove("open");
+// фильтры
+let ft=null;
+$("#fl").innerHTML=Object.keys(T).map(k=>`<button class="chip" data-k="${k}">${T[k]}</button>`).join("");
+$("#fl").onclick=e=>{const k=e.target.dataset.k;if(!k)return;ft=ft===k?null:k;[...$("#fl").children].forEach(c=>c.classList.toggle("on",c.dataset.k===ft));draw()};
+$("#q").oninput=draw;
+function draw(){const s=$("#q").value.trim().toLowerCase();
+const l=B.map((b,i)=>[b,i]).filter(([b])=>(!ft||b[2].split(" ").includes(ft))&&b[0].toLowerCase().includes(s));
+$("#bg2").innerHTML=l.length?l.map(([b,i])=>`<div class="bc rv in" onclick="open_(${i})"><div class="im">${cat(b[1])}${ph(i)}</div><div class="tx"><h3>${b[0]}</h3><p>${b[6]}</p><p>⚡ Активность: ${b[4]} · 📏 ${b[3]} · ⏳ ${b[5]}</p>${b[2].split(" ").map(t=>`<span class="tag">${T[t]}</span>`).join("")}</div></div>`).join(""):"<p>Ничего не найдено 😿</p>"}
+draw();
+function open_(i){const b=B[i],t=b[2].split(" ");
+$("#mb").innerHTML=`<button class="x" onclick="closeM()">×</button><h2>${b[0]}</h2><div class="im">${cat(b[1])}${ph(i)}</div><div class="dl">
+<div><b>Характер</b>${b[6]}</div><div><b>Внешность</b>${b[7]}</div><div><b>Размер</b>${b[3]}</div><div><b>Активность</b>${b[4]}</div><div><b>Продолжительность жизни</b>${b[5]}</div><div><b>Уход</b>${b[8]}</div>
+<div><b>Питание</b>Полнорационный корм по возрасту; порцию подбирают по рекомендациям производителя и ветеринара.</div>
+<div><b>Подходит ли начинающему владельцу</b>${t.includes("newbie")?"Да, порода неприхотлива и подойдёт новичку.":"Можно, но нужно заранее изучить особенности породы."}</div>
+<div><b>Подходит ли для квартиры</b>${t.includes("big")?"Да, но нужно достаточно места.":t.includes("active")?"Да, если много играть и есть высокие полки.":"Да, отлично живёт в квартире."}</div>
+<div><b>Отношение к детям</b>${b[9]}</div><div><b>Отношение к другим животным</b>${b[10]}</div><div><b>Интересные факты</b>${b[11]}</div>
+<div><b>Кому подойдёт эта кошка?</b>${b[12]}</div><div><b>На какую ещё породу она похожа?</b>${b[13]}</div></div>`;
+$("#modal").classList.add("show");document.body.style.overflow="hidden"}
+function closeM(){$("#modal").classList.remove("show");document.body.style.overflow=""}
+$("#modal").onclick=e=>{if(e.target.id==="modal")closeM()};
+// тест
+const Q=[
+["Как ты проводишь свободное время?",[["Лежу дома и отдыхаю",[3,0,0,1]],["Иду гулять и искать приключения",[0,3,1,1]],["Провожу время с друзьями",[0,1,3,0]],["Занимаюсь своими делами",[1,0,0,3]]]],
+["Как ты реагируешь на незнакомых людей?",[["Сразу иду знакомиться",[0,1,3,0]],["Сначала наблюдаю",[2,0,1,2]],["Немного стесняюсь",[2,0,1,1]],["Предпочитаю держаться подальше",[1,0,0,3]]]],
+["Что тебе больше подходит?",[["Тихий уютный вечер",[3,0,1,1]],["Активный день",[0,3,1,1]],["Большая компания",[0,1,3,0]],["Приключения и новые впечатления",[0,3,1,2]]]],
+["Как выглядит твой идеальный выходной?",[["Плед, чай и сериал",[3,0,1,1]],["Поход или спорт",[0,3,0,2]],["Вечеринка или кафе с друзьями",[0,1,3,0]],["Хобби в одиночестве",[1,1,0,3]]]],
+["Насколько ты любишь внимание?",[["Обожаю, чем больше, тем лучше",[0,1,3,0]],["Люблю, но в меру",[2,0,2,1]],["Только от близких",[2,0,1,2]],["Лучше без него",[1,0,0,3]]]],
+["Как ты реагируешь на неожиданные планы?",[["Ура, приключение!",[0,3,2,0]],["Нужно время подумать",[2,0,1,2]],["Согласен, если с друзьями",[1,1,3,0]],["Не люблю менять планы",[3,0,0,2]]]],
+["Что тебе ближе?",[["Самостоятельность",[1,1,0,3]],["Постоянное общение",[0,1,3,0]],["Баланс",[2,1,2,2]],["Зависит от настроения",[1,2,1,2]]]],
+["Какой у тебя характер?",[["Спокойный и мягкий",[3,0,2,0]],["Энергичный и любопытный",[0,3,2,1]],["Весёлый и общительный",[1,2,3,0]],["Загадочный и гордый",[1,1,0,3]]]]];
+let qi,sc;
+function start(){qi=0;sc=[0,0,0,0];step()}
+function step(){if(qi>=Q.length)return result();const q=Q[qi];
+$("#qz").innerHTML=`<div class="pg"><i style="width:${qi/Q.length*100}%"></i></div><div class="qs"><p style="color:var(--mut)">Вопрос ${qi+1} из ${Q.length}</p><h3>${q[0]}</h3>${q[1].map((a,j)=>`<button class="ans" data-j="${j}">${a[0]}</button>`).join("")}</div>`;
+requestAnimationFrame(()=>{const p=$(".pg i");p.style.width=(qi+1)/Q.length*100+"%"})}
+$("#qz").onclick=e=>{const j=e.target.dataset.j;if(j===undefined)return;Q[qi][1][j][1].forEach((v,k)=>sc[k]+=v);qi++;step()};
+function result(){const n=sc.reduce((a,b)=>a+b,0)||1,u=sc.map(v=>v/n);
+const r=B.map((b,i)=>{const p=b[14],s=p.reduce((a,b)=>a+b,0)||1;let d=0;p.forEach((v,k)=>d+=Math.abs(v/s-u[k]));return[d,i]}).sort((a,b)=>a[0]-b[0])[0][1],b=B[r];
+const traits=["спокойный","энергичный","общительный","самостоятельный"];
+const top=u.map((v,i)=>[v,i]).sort((a,b)=>b[0]-a[0]).slice(0,2).map(x=>traits[x[1]]).join(" и ");
+$("#qz").innerHTML=`<div class="pg"><i style="width:100%"></i></div><div class="res"><h2>Ты — ${b[0].toLowerCase()}! 🐈</h2><div class="im">${cat(b[1])}${ph(r)}</div>
+<p>Ты ${top} человек. Тебе близок характер этой породы: ${b[6].toLowerCase()}</p>
+<div class="dl" style="text-align:left"><div><b>Особенности породы</b>${b[7]} Размер: ${b[3].toLowerCase()}, активность: ${b[4].toLowerCase()}.</div><div><b>Интересный факт</b>${b[11]}</div></div>
+<div class="big"><button class="btn alt" onclick="start()">Пройти тест ещё раз</button><button class="btn" onclick="open_(${r})">Узнать больше об этой породе</button></div></div>`}
+start();
+// факты
+const F=[["Почему кошки мурлыкают?","Чаще всего от удовольствия, но иногда и чтобы успокоиться или привлечь внимание."],["Зачем кошке усы?","Это органы осязания: помогают ориентироваться в темноте и оценивать, пролезет ли она в щель."],["Почему кошки любят коробки?","В замкнутом пространстве они чувствуют себя защищёнными и согреваются."],["Почему кошки спят так много?","Они хищники и экономят энергию для охоты: кошка может спать 12–16 часов в сутки."],["Зачем кошка двигает хвостом?","Хвост — «язык» эмоций: вертикально поднятый обычно означает дружелюбие, а резкие взмахи — раздражение."],["Почему кошки трутся о человека?","Так они оставляют свой запах и отмечают тебя как «своего»."]];
+$("#fg").innerHTML=F.map(f=>`<div class="card fc rv"><h3 class="q">🐾 ${f[0]}</h3><p class="a">${f[1]}</p></div>`).join("");
+$("#fg").onclick=e=>{const c=e.target.closest(".fc");if(c)c.classList.toggle("open")};
+// магазины
+const S=[["Корм","🍗","зоомагазин корм для кошек"],["Товары для кошек","🐱","товары для кошек"],["Игрушки","🧶","зоомагазин игрушки для кошек"],["Наполнители","🪣","наполнитель для кошачьего туалета"],["Ветеринарные товары","💊","ветеринарная аптека"],["Аксессуары","🎀","зоомагазин аксессуары для кошек"]];
+$("#sh").innerHTML=S.map(s=>`<div class="card rv"><h3>${s[1]} ${s[0]}</h3><p style="color:var(--mut)">Найти ближайшие магазины и посмотреть адреса, телефоны и часы работы.</p><a class="btn alt" target="_blank" rel="noopener" href="https://yandex.ru/maps/54/yekaterinburg/search/${encodeURIComponent(s[2]+" Екатеринбург")}/">Открыть на карте</a></div>`).join("");
+// появление при прокрутке
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}}),{threshold:.1});
+document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+</script>
+</body>
+</html>
